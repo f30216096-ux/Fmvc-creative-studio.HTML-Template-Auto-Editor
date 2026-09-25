@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HTML Template Auto Editor</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#0d0b12;color:#f5f2f7;padding:22px}
+.wrap{max-width:900px;margin:auto}
+h1{margin:0 0 8px;font-size:30px}
+.sub{color:#b9b1c0;margin-bottom:22px}
+.card{background:#17131d;border:1px solid #30283a;border-radius:18px;padding:20px;margin:14px 0;box-shadow:0 10px 30px #0005}
+label{display:block;font-weight:700;margin:12px 0 7px}
+input,textarea,button{font:inherit}
+input[type=text],textarea{width:100%;background:#0e0b12;color:#fff;border:1px solid #3b3045;border-radius:10px;padding:11px}
+textarea{min-height:100px;resize:vertical}
+input[type=file]{width:100%;padding:10px;background:#0e0b12;border-radius:10px;border:1px dashed #51445e;color:#ddd}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rep{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin:8px 0}
+button{border:0;border-radius:10px;padding:11px 16px;cursor:pointer;font-weight:700}
+.primary{background:#f0788a;color:#221018}
+.secondary{background:#2b2433;color:#fff}
+.danger{background:#5a2631;color:#fff}
+.status{margin-top:12px;color:#a9e6bb;white-space:pre-wrap}
+.small{font-size:13px;color:#aaa1ae}
+@media(max-width:650px){.row,.rep{grid-template-columns:1fr}.rep button{width:100%}}
+
+/* FM Creative Studio publishing skin */
+body{position:relative;overflow-x:hidden;background:#05030b}
+.bg-orb{position:fixed;width:280px;height:280px;border-radius:50%;filter:blur(65px);opacity:.24;pointer-events:none;z-index:-2;animation:floatOrb 9s ease-in-out infinite}
+.orb1{background:#8b5cf6;top:-90px;left:-70px}
+.orb2{background:#06b6d4;right:-100px;top:25%;animation-delay:-3s}
+.orb3{background:#ec4899;left:25%;bottom:-150px;animation-delay:-6s}
+@keyframes floatOrb{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(25px,-30px,0) scale(1.12)}}
+.brand-header{width:min(940px,calc(100% - 28px));margin:18px auto 8px;display:flex;align-items:center;gap:13px;padding:14px 18px;border:1px solid rgba(255,255,255,.13);border-radius:20px;background:rgba(10,7,20,.58);backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(0,0,0,.25);animation:slideDown .75s ease both}
+.brand-mark{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;font-weight:900;font-size:19px;letter-spacing:1px;color:#fff;background:linear-gradient(135deg,#8b5cf6,#06b6d4);box-shadow:0 0 28px rgba(139,92,246,.4)}
+.brand-title{font-size:clamp(18px,4vw,27px);font-weight:900;letter-spacing:1.5px;color:#fff;text-shadow:0 0 20px rgba(139,92,246,.35)}
+.brand-subtitle{margin-top:3px;font-size:10px;letter-spacing:2px;color:#aeb7c8}
+.telegram-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:fit-content;margin:0 auto 18px;padding:11px 18px;border-radius:999px;text-decoration:none;color:#fff;font-weight:800;background:linear-gradient(135deg,#229ed9,#167bb0);box-shadow:0 8px 25px rgba(34,158,217,.28);transition:transform .25s ease,box-shadow .25s ease}
+.telegram-btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 13px 32px rgba(34,158,217,.42)}
+.tg-icon{font-size:18px;animation:telegramPulse 2s ease-in-out infinite}
+@keyframes telegramPulse{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(3px) rotate(-8deg)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-22px)}to{opacity:1;transform:translateY(0)}}
+.container>*{animation:rise .65s ease both}
+.container>*:nth-child(2){animation-delay:.08s}.container>*:nth-child(3){animation-delay:.16s}.container>*:nth-child(4){animation-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+</style>
+</head>
+<body>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
+<div class="particles" aria-hidden="true"></div>
+<header class="brand-header">
+  <div class="brand-mark">FM</div>
+  <div>
+    <div class="brand-title">FM CREATIVE STUDIO</div>
+    <div class="brand-subtitle">PROGRAMMING • CREATIVITY • MEMORIES</div>
+  </div>
+</header>
+<div class="wrap">
+  <h1>HTML Template Auto Editor</h1>
+  <div class="sub">Load your HTML template, replace names/text, optionally replace the first embedded image, then generate a new HTML file.</div>
+
+  <div class="card">
+    <label>1. HTML Template</label>
+    <input id="htmlFile" type="file" accept=".html,.htm">
+    <div class="small">Your original design/code stays unchanged except for the replacements you choose.</div>
+  </div>
+
+  <div class="card">
+    <label>2. Quick name replacement</label>
+    <div class="row">
+      <div><input id="oldName" type="text" placeholder="Old name, e.g. Megh"></div>
+      <div><input id="newName" type="text" placeholder="New name, e.g. Farhan"></div>
+    </div>
+    <div class="small">Replaces every exact occurrence of the old name in the HTML.</div>
+  </div>
+
+  <div class="card">
+    <label>3. Other text replacements</label>
+    <div id="replacements"></div>
+    <button class="secondary" onclick="addReplacement()">+ Add another replacement</button>
+    <div class="small">Example: “Dear Megh Apu,” → “Dear Farhan,”. Replacements are exact and case-sensitive.</div>
+  </div>
+
+  <div class="card">
+    <label>4. Replace the first image</label>
+    <input id="imageFile" type="file" accept="image/*">
+    <div class="small">If the template contains a base64/data image, it will be replaced with the selected image. If not, the first &lt;img src="..."&gt; is replaced.</div>
+  </div>
+
+  <div class="card">
+    <label>5. Output file name</label>
+    <input id="outName" type="text" value="new_template.html" placeholder="new_template.html">
+    <br><br>
+    <button class="primary" onclick="generate()">Generate New HTML</button>
+    <button class="secondary" onclick="preview()">Preview</button>
+    <div id="status" class="status"></div>
+  </div>
+</div>
+
+<script>
+let templateText = "";
+let imageData = "";
+
+document.getElementById("htmlFile").addEventListener("change", async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  templateText = await f.text();
+  document.getElementById("status").textContent = "Template loaded: " + f.name;
+});
+
+document.getElementById("imageFile").addEventListener("change", e => {
+  const f = e.target.files[0];
+  if (!f) { imageData=""; return; }
+  const r = new FileReader();
+  r.onload = () => imageData = r.result;
+  r.readAsDataURL(f);
+});
+
+function addReplacement(oldVal="", newVal=""){
+  const div=document.createElement("div");
+  div.className="rep";
+  div.innerHTML=`
+    <input class="oldText" type="text" placeholder="Old text" value="${escapeAttr(oldVal)}">
+    <input class="newText" type="text" placeholder="New text" value="${escapeAttr(newVal)}">
+    <button class="danger" type="button">Remove</button>`;
+  div.querySelector("button").onclick=()=>div.remove();
+  document.getElementById("replacements").appendChild(div);
+}
+function escapeAttr(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+
+function build(){
+  if(!templateText){ alert("First choose an HTML template."); return null; }
+  let out=templateText;
+
+  const oldName=document.getElementById("oldName").value;
+  const newName=document.getElementById("newName").value;
+  if(oldName) out=out.split(oldName).join(newName);
+
+  document.querySelectorAll(".rep").forEach(row=>{
+    const a=row.querySelector(".oldText").value;
+    const b=row.querySelector(".newText").value;
+    if(a) out=out.split(a).join(b);
+  });
+
+  if(imageData){
+    const imgRe=/<img\b([^>]*?)\bsrc\s*=\s*(['"])(.*?)\2([^>]*)>/i;
+    if(imgRe.test(out)){
+      out=out.replace(imgRe,(m,before,q,src,after)=>{
+        return '<img'+before+'src='+q+imageData+q+after+'>';
+      });
+    }else{
+      alert("No <img> tag was found in the template.");
+    }
+  }
+  return out;
+}
+
+function generate(){
+  const out=build();
+  if(out===null) return;
+  let name=document.getElementById("outName").value.trim() || "new_template.html";
+  if(!/\.html?$/i.test(name)) name += ".html";
+  const blob=new Blob([out],{type:"text/html;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  document.getElementById("status").textContent="Done! New HTML file generated: "+name;
+}
+
+function preview(){
+  const out=build();
+  if(out===null) return;
+  const w=window.open();
+  if(!w){alert("Allow pop-ups to preview.");return;}
+  w.document.open(); w.document.write(out); w.document.close();
+}
+
+addReplacement();
+</script>
+
+<script>
+(function(){
+  const box=document.querySelector('.particles');
+  if(!box) return;
+  for(let i=0;i<28;i++){
+    const s=document.createElement('i');
+    s.style.left=Math.random()*100+'%';
+    s.style.animationDelay=(Math.random()*8)+'s';
+    s.style.animationDuration=(6+Math.random()*8)+'s';
+    s.style.opacity=(.15+Math.random()*.45);
+    box.appendChild(s);
+  }
+})();
+</script>
+<style>
+.particles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-1}
+.particles i{position:absolute;bottom:-10px;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 9px rgba(255,255,255,.8);animation:particleRise linear infinite}
+@keyframes particleRise{from{transform:translateY(0) scale(.7)}to{transform:translateY(-110vh) scale(1.25)}}
+</style>
+
+</body>
+</html>
